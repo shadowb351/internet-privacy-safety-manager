@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PrivacyLens AI</string>
+    <string name="header_title">Privacy Scanner</string>
+    <string name="header_subtitle">Select apps to analyze</string>
+    <string name="search_hint">Search apps...</string>
+    <string name="select_all">Select All</string>
+    <string name="scan_button">Scan Selected Apps</string>
+</resources>
