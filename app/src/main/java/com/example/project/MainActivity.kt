@@ -10,13 +10,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.activity.viewModels
 import com.example.project.databinding.ActivityMainBinding
+import com.example.project.viewmodel.ScanViewModel
+import com.example.project.data.model.AppInfo
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: AppAdapter
     private var allApps: List<AppModel> = emptyList()
+    private val viewModel: ScanViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
         loadInstalledApps()
         setupListeners()
+        setupObservers()
     }
 
     private fun setupRecyclerView() {
@@ -84,12 +89,17 @@ class MainActivity : AppCompatActivity() {
         binding.btnScan.setOnClickListener {
             val selectedApps = adapter.getSelectedApps()
             if (selectedApps.isNotEmpty()) {
-                val appNames = selectedApps.joinToString(", ") { it.name }
-                Toast.makeText(this, "Scanning: $appNames", Toast.LENGTH_LONG).show()
-                // TODO: Integrate actual AI analysis logic here
+                val appInfos = selectedApps.map { AppInfo(it.name, it.packageName) }
+                viewModel.scanApps(appInfos)
             } else {
                 Toast.makeText(this, "Please select apps to scan", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    private fun setupObservers() {
+        viewModel.scanStatus.observe(this) { status ->
+            Toast.makeText(this, status, Toast.LENGTH_LONG).show()
         }
     }
 
