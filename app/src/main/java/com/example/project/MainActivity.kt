@@ -38,6 +38,31 @@ class MainActivity : AppCompatActivity() {
         loadInstalledApps()
         setupListeners()
         setupObservers()
+        val prefs = getSharedPreferences("PrivacyLensPrefs", android.content.Context.MODE_PRIVATE)
+        val isMonitoring = prefs.getBoolean("live_monitoring_enabled", false)
+        
+        binding.switchLiveMonitor.isChecked = isMonitoring
+        if (isMonitoring) {
+            startMonitorService()
+        }
+
+        binding.switchLiveMonitor.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit().putBoolean("live_monitoring_enabled", isChecked).apply()
+            if (isChecked) {
+                startMonitorService()
+            } else {
+                stopService(android.content.Intent(this, com.example.project.service.PermissionMonitorService::class.java))
+            }
+        }
+    }
+
+    private fun startMonitorService() {
+        val serviceIntent = android.content.Intent(this, com.example.project.service.PermissionMonitorService::class.java)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
     }
 
     private fun setupRecyclerView() {
@@ -85,6 +110,15 @@ class MainActivity : AppCompatActivity() {
             adapter.selectAll(!areAllSelected)
         }
 
+        // New Feature Buttons
+        binding.btnWeeklyReport.setOnClickListener {
+            startActivity(android.content.Intent(this, com.example.project.ui.PermissionReportActivity::class.java))
+        }
+        
+        binding.btnFixCenter.setOnClickListener {
+            startActivity(android.content.Intent(this, com.example.project.ui.PrivacyFixActivity::class.java))
+        }
+
         // Scan Button
         binding.btnScan.setOnClickListener {
             val selectedApps = adapter.getSelectedApps()
@@ -99,7 +133,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         viewModel.scanStatus.observe(this) { status ->
-            Toast.makeText(this, status, Toast.LENGTH_LONG).show()
+            if (status.startsWith("Error") || status.startsWith("Failed")) {
+                Toast.makeText(this, status, Toast.LENGTH_LONG).show()
+                // Navigate to result activity with error message
+                val intent = android.content.Intent(this, ScanResultActivity::class.java)
+                intent.putExtra("error_message", status)
+                startActivity(intent)
+            }
+        }
+        
+        viewModel.scanResults.observe(this) { results ->
+            if (results.isNotEmpty()) {
+                val intent = android.content.Intent(this, ScanResultActivity::class.java)
+                intent.putExtra("scan_results", com.google.gson.Gson().toJson(results))
+                startActivity(intent)
+            }
         }
     }
 

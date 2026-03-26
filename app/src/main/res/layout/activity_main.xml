@@ -30,7 +30,8 @@
                 app:tint="@color/primary_blue" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:orientation="vertical">
@@ -50,8 +51,43 @@
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchLiveMonitor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Live Monitor"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
 
+    </LinearLayout>
+
+    <!-- Feature Buttons -->
+    <LinearLayout
+        android:id="@+id/featureButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer">
+
+        <Button
+            android:id="@+id/btnWeeklyReport"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Weekly Report"
+            android:backgroundTint="@color/primary_blue"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnFixCenter"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Fix Center"
+            android:backgroundTint="@color/primary_blue"
+            android:layout_marginStart="8dp"/>
     </LinearLayout>
 
     <!-- Search Bar -->
@@ -59,6 +95,7 @@
         android:id="@+id/etSearch"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginTop="16dp"
         android:layout_marginHorizontal="16dp"
         android:background="#2C2C2C"
         android:drawableStart="@drawable/ic_search"
@@ -69,7 +106,7 @@
         android:textColorHint="@color/text_secondary"
         app:layout_constraintEnd_toStartOf="@+id/btnSelectAll"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerContainer" />
+        app:layout_constraintTop_toBottomOf="@id/featureButtons" />
 
     <Button
         android:id="@+id/btnSelectAll"
