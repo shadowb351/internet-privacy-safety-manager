@@ -14,5 +14,9 @@ data class AppScanResult(
     val thirdPartySharing: Boolean,
     val sensitiveDataDetected: List<String>,
     val summary: String,
-    val riskScore: Int
+    val riskScore: Int,
+    val riskLevel: String? = null,
+    val detectedDomain: String? = null,
+    val unnecessaryDataCollected: List<String> = emptyList(),
+    val riskReasons: List<String> = emptyList()
 )
