@@ -17,8 +17,9 @@ app.add_middleware(
 )
 
 # Configure Gemini
-genai.configure(api_key="AIzaSyCGq7WjlqgCReBcMmLqa1vQkb7fH7DHzZA")
+import os
 
+genai.configure(api_key=os.getenv("AIzaSyDpfMlWhrUgUtVn4UvzqJDjns6pJ9zu1CY"))
 class PolicyRequest(BaseModel):
     policyUrl: HttpUrl
 
