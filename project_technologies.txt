@@ -1,0 +1,47 @@
+Project Technologies & Functionalities Overview
+
+This document outlines the core technologies and dependencies used across the project, divided into the Android Frontend (Mobile App) and the Python Backend.
+
+=========================================
+1. ANDROID FRONTEND (MOBILE APP)
+=========================================
+
+Core & Architecture:
+- Kotlin: The primary programming language used for Android app development.
+- ViewBinding: A feature that allows you to more easily write code that interacts with views, replacing findViewById.
+- AndroidX ViewModel (lifecycle-viewmodel-ktx): An architecture component used to store and manage UI-related data in a lifecycle-conscious way, allowing data to survive configuration changes.
+- Kotlin Coroutines (kotlinx-coroutines-android): Used for asynchronous and non-blocking programming, crucial for handling background tasks like network requests without freezing the main UI thread.
+
+UI & Layout:
+- XML Layouts: Used for designing the declarative interface, such as the scan result screens.
+- ConstraintLayout: A flexible layout manager used to create complex and responsive UI structures efficiently.
+- Material Design Components: UI library providing modern, standardized Android components and styling.
+- AndroidX AppCompat / Core Ktx: Provide backward compatibility for newer Android features and Kotlin extensions for core platform APIs.
+
+Networking & Data Parsing:
+- Retrofit2 (com.squareup.retrofit2:retrofit): A type-safe HTTP client for Android. Used to easily construct HTTP requests and communicate with the Python backend API.
+- Gson (com.google.code.gson:gson): A library used to serialize and deserialize Kotlin/Java objects to and from JSON formats.
+- Retrofit Gson Converter (converter-gson): Integrates Gson with Retrofit to automatically parse JSON API responses into Kotlin data models (such as `AppInfo`).
+
+Build System & Testing:
+- Gradle (Kotlin DSL / build.gradle.kts): The build automation system used for compiling the app, managing dependencies, and creating the APK/AAB files.
+- JUnit & Espresso: Frameworks used for unit testing and UI instrumentation testing respectively.
+
+=========================================
+2. PYTHON BACKEND (REST API)
+=========================================
+
+Core Framework & Server:
+- Python: The primary programming language used for the backend service responsible for data processing and AI analysis.
+- FastAPI (fastapi): A modern, high-performance web framework used for building the RESTful API endpoints (e.g., the /analyze-policy endpoint). It provides automatic data validation and interactive API documentation out of the box.
+- Uvicorn (uvicorn): A lightning-fast ASGI web server implementation used to serve and run the FastAPI application.
+
+Data Validation & Modeling:
+- Pydantic (pydantic): A data validation library that is deeply integrated with FastAPI. Used to define data shapes (schemas) via Python type hints, ensuring that incoming and outgoing data conforms strictly to expected formats.
+
+External Communication & Parsing:
+- Requests (requests): An HTTP client library used by the backend to fetch external resources over the internet, such as downloading raw privacy policy webpages via URL.
+- BeautifulSoup4 (beautifulsoup4): An HTML parsing library used to navigate, search, and extract clean text content from the messy, raw downloaded HTML privacy policy pages before sending them to the AI for analysis.
+
+AI Analysis & Processing:
+- Google Generative AI (google-generativeai): The official SDK for accessing the Google Gemini API. In this project, it is used to structurally analyze the cleaned text of privacy policies, intelligently extract details about data collection and sharing practices, calculate risk scores, and format the results into a clean JSON structure that the Android app can consume.

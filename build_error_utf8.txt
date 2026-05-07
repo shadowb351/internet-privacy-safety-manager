@@ -1,0 +1,62 @@
+﻿.\gradlew : Picked up 
+_JAVA_OPTIONS: 
+-Xmx512M
+At line:1 char:1
++ .\gradlew tasks 
+2>&1 | Out-File 
+build_error_utf8.txt 
+-Encoding utf8
++ ~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: (Picked up    
+ _JAVA_OPTIONS: -X    
+mx512M:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+> Task :tasks FAILED
+
+[Incubating] Problems report is available at: file:///D:/dmproject/build/reports/problems/problems-report.html
+
+FAILURE: Build failed 
+with an exception.
+
+* What went wrong:
+Execution failed for 
+task ':tasks'.
+> Could not create 
+task ':app:kaptDebugKo
+tlin'.
+   > 'org.gradle.api.f
+ile.FileCollection org
+.gradle.api.artifacts.
+Configuration.fileColl
+ection(org.gradle.api.
+specs.Spec)'
+
+* Try:
+> Run with 
+--stacktrace option 
+to get the stack 
+trace.
+> Run with --info or 
+--debug option to get 
+more log output.
+> Run with --scan to 
+generate a Build Scan 
+(Powered by 
+Develocity).
+> Get more help at htt
+ps://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.1.0/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 3s
+1 actionable task: 1 executed

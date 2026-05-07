@@ -20,7 +20,13 @@ class AppAdapter(
             binding.cbSelect.isChecked = app.isSelected
 
             binding.cbSelect.setOnCheckedChangeListener { _, isChecked ->
-                app.isSelected = isChecked
+                if (isChecked) {
+                    apps.forEach { if (it !== app) it.isSelected = false }
+                    app.isSelected = true
+                    binding.root.post { notifyDataSetChanged() }
+                } else {
+                    app.isSelected = false
+                }
                 onSelectionChanged(getSelectedCount())
             }
             
@@ -45,12 +51,6 @@ class AppAdapter(
     fun updateData(newApps: List<AppModel>) {
         apps = newApps
         notifyDataSetChanged()
-    }
-
-    fun selectAll(select: Boolean) {
-        apps.forEach { it.isSelected = select }
-        notifyDataSetChanged()
-        onSelectionChanged(getSelectedCount())
     }
 
     fun getSelectedCount(): Int {

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_app_item_card"
+    android:padding="12dp">
+
+    <!-- Usually we'd use the loaded icon here -->
+    <ImageView
+        android:id="@+id/ivAppIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llAppInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintStart_toEndOf="@id/ivAppIcon"
+        app:layout_constraintEnd_toStartOf="@id/tvRiskScore"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/ivAppIcon">
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="WhatsApp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDataTypesCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="6 data types"
+            android:textColor="#A0A0A0"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvRiskScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#333300"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        tools:text="Medium"
+        android:textColor="#FFC107"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/ivAppIcon" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRemovePermissions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Manage Permissions  >"
+        android:textColor="#F44336"
+        android:textStyle="bold"
+        app:backgroundTint="#1A1515"
+        app:strokeColor="#F44336"
+        app:strokeWidth="1dp"
+        app:cornerRadius="12dp"
+        app:layout_constraintTop_toBottomOf="@id/ivAppIcon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

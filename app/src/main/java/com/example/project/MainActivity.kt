@@ -14,6 +14,20 @@ import androidx.activity.viewModels
 import com.example.project.databinding.ActivityMainBinding
 import com.example.project.viewmodel.ScanViewModel
 import com.example.project.data.model.AppInfo
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import java.util.concurrent.TimeUnit
+import com.example.project.worker.PermissionSyncWorker
+import android.app.usage.UsageStatsManager
+import android.content.Context
+import androidx.appcompat.app.AlertDialog
+import com.example.project.data.db.AppDatabase
+import com.example.project.data.db.PermissionLogEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,32 +52,74 @@ class MainActivity : AppCompatActivity() {
         loadInstalledApps()
         setupListeners()
         setupObservers()
-        val prefs = getSharedPreferences("PrivacyLensPrefs", android.content.Context.MODE_PRIVATE)
-        val isMonitoring = prefs.getBoolean("live_monitoring_enabled", false)
         
-        binding.switchLiveMonitor.isChecked = isMonitoring
-        if (isMonitoring) {
-            startMonitorService()
+        val prefs = getSharedPreferences("PrivacyLensPrefs", Context.MODE_PRIVATE)
+        val isMonitorEnabled = prefs.getBoolean("LiveMonitorEnabled", false)
+        binding.switchLiveMonitor.isChecked = isMonitorEnabled
+        
+        if (isMonitorEnabled) {
+            startLiveMonitor()
         }
 
         binding.switchLiveMonitor.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit().putBoolean("live_monitoring_enabled", isChecked).apply()
-            if (isChecked) {
-                startMonitorService()
-            } else {
-                stopService(android.content.Intent(this, com.example.project.service.PermissionMonitorService::class.java))
-            }
+            setLiveMonitorEnabled(isChecked)
         }
     }
 
-    private fun startMonitorService() {
-        val serviceIntent = android.content.Intent(this, com.example.project.service.PermissionMonitorService::class.java)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            startForegroundService(serviceIntent)
+    private fun setLiveMonitorEnabled(enabled: Boolean) {
+        val prefs = getSharedPreferences("PrivacyLensPrefs", Context.MODE_PRIVATE)
+        prefs.edit().putBoolean("LiveMonitorEnabled", enabled).apply()
+
+        if (enabled) {
+            startLiveMonitor()
+            insertDemoBackgroundLog()
+            Toast.makeText(this, "Live Monitor Started", Toast.LENGTH_SHORT).show()
         } else {
-            startService(serviceIntent)
+            stopLiveMonitor()
+            Toast.makeText(this, "Live Monitor Stopped", Toast.LENGTH_SHORT).show()
         }
     }
+
+    private fun startLiveMonitor() {
+        val workRequest = PeriodicWorkRequestBuilder<PermissionSyncWorker>(
+            15, TimeUnit.MINUTES,
+            5, TimeUnit.MINUTES
+        ).build()
+            
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "PermissionSyncWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+        
+        val immediateWork = OneTimeWorkRequestBuilder<PermissionSyncWorker>()
+            .addTag("ImmediateSync")
+            .build()
+        WorkManager.getInstance(this).enqueue(immediateWork)
+    }
+
+    private fun stopLiveMonitor() {
+        WorkManager.getInstance(this).cancelUniqueWork("PermissionSyncWork")
+        WorkManager.getInstance(this).cancelAllWorkByTag("ImmediateSync")
+    }
+
+    private fun insertDemoBackgroundLog() {
+        val db = AppDatabase.getDatabase(this)
+        CoroutineScope(Dispatchers.IO).launch {
+            db.permissionLogDao().insertLog(
+                PermissionLogEntity(
+                    appName = "Snapchat",
+                    packageName = "com.snapchat.android",
+                    permissionType = "Microphone",
+                    timestamp = System.currentTimeMillis() - 1000 * 60 * 30, // 30 mins ago
+                    accessType = "BACKGROUND",
+                    isSuspicious = true
+                )
+            )
+        }
+    }
+
+
 
     private fun setupRecyclerView() {
         adapter = AppAdapter(emptyList()) { selectedCount ->
@@ -102,12 +158,6 @@ class MainActivity : AppCompatActivity() {
         binding.etSearch.addTextChangedListener { text ->
             val query = text.toString()
             filterApps(query)
-        }
-
-        // Select All
-        binding.btnSelectAll.setOnClickListener {
-            val areAllSelected = adapter.getSelectedCount() == adapter.itemCount && adapter.itemCount > 0
-            adapter.selectAll(!areAllSelected)
         }
 
         // New Feature Buttons
@@ -164,7 +214,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateScanButton(count: Int) {
-        binding.btnScan.text = if (count > 0) "Scan $count Selected Apps" else "Scan Selected Apps"
+        binding.btnScan.text = if (count > 0) "Scan Selected App" else "Select App to Scan"
         binding.btnScan.isEnabled = count > 0 // Optional: disable if 0
     }
 }

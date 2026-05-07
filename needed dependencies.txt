@@ -1,0 +1,56 @@
+Project: PrivacyLens AI
+
+To fully run this project on a new computer, you will need to install the following core tools, programming languages, and dependencies for both the frontend application and the backend server.
+
+=========================================
+1. ANDROID FRONTEND
+=========================================
+The Android mobile app is built using Kotlin. All specific library dependencies (like Retrofit, AndroidX, and Coroutines) are automatically handled by the Gradle build system, but you need Android Studio to compile and run it.
+
+- Core Tool Required: Android Studio (Ladybug or newer recommended)
+- Embedded Language: Kotlin & Java (JDK 17 comes embedded with Android Studio)
+- Download Link: https://developer.android.com/studio
+
+How to install and run (No terminal required for this part):
+1. Download and install Android Studio from the link above.
+2. Open Android Studio -> Select "Open Project" -> Select your project folder (e.g., the `d:\dmproject` folder).
+3. Wait for the initial "Gradle Sync" to finish on the bottom right. It will automatically download all internal specifics.
+4. Press the green "Play" (Run) button at the top toolbar to launch it on an emulator or a plugged-in Android device.
+
+
+=========================================
+2. PYTHON BACKEND (REST API)
+=========================================
+The backend logic and AI processing require a Python environment.
+
+- Core Language Required: Python 3.9 or newer (Python 3.10+ recommended)
+- Download Link: https://www.python.org/downloads/
+  (IMPORTANT: Make sure to check the box "Add Python to PATH" during the Windows installation!)
+
+Python Specific Libraries Needed:
+- fastapi (>=0.111.0)
+- uvicorn (>=0.30.1)
+- requests (>=2.32.3)
+- beautifulsoup4 (>=4.12.3)
+- google-generativeai (>=0.5.4)
+- pydantic (>=2.7.4)
+
+How to install and run using Command Terminal:
+
+1. Open your Command Prompt (cmd) or PowerShell, and navigate to the backend folder:
+   cd path\to\your\project\backend
+
+2. (Optional but Highly Recommended) Create an isolated virtual environment:
+   python -m venv venv
+   venv\Scripts\activate
+
+3. Install all the necessary dependencies in one swift command:
+   pip install -r requirements.txt
+
+   (Alternatively, if you don't have the text file handy, you can run this direct command):
+   pip install fastapi>=0.111.0 uvicorn>=0.30.1 requests>=2.32.3 beautifulsoup4>=4.12.3 google-generativeai>=0.5.4 pydantic>=2.7.4
+
+4. Finally, start the backend server:
+   uvicorn main:app --reload
+
+(Keep this terminal open while testing the Android App, as the app needs to talk to this local server).
